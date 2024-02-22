@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContactListItem } from '../ContactListItem';
+import { ContactListItem } from '../ContactListItem/ContactListItem';
 import styles from './styles.module.css';
 
 export const ContactList = ({ contacts, deleteContact }) => {

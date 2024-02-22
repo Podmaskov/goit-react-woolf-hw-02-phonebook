@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ContactForm } from './ContactForm';
-import { Filter } from './Filter';
-import { ContactList } from './ContactList';
+import { ContactForm } from './ContactForm/ContactForm';
+import { Filter } from './Filter/Filter';
+import { ContactList } from './ContactList/ContactList';
 import { nanoid } from 'nanoid';
 
 import styles from './styles.module.css';
@@ -9,8 +9,6 @@ import styles from './styles.module.css';
 export class App extends Component {
   state = {
     contacts: [],
-    name: '',
-    number: '',
     filter: '',
   };
 
@@ -25,24 +23,20 @@ export class App extends Component {
     );
   };
 
-  addContact = event => {
-    event.preventDefault();
-    if (this.checkNameDuplicate(event.target.name.value)) {
-      alert(`${event.target.name.value} is already in contacts`);
+  addContact = ({ name, number }) => {
+    if (this.checkNameDuplicate(name)) {
+      alert(`${name} is already in contacts`);
       return;
     }
     this.setState(prevState => ({
       contacts: [
         {
           id: nanoid(),
-          name: event.target.name.value,
-          number: event.target.number.value,
+          name,
+          number,
         },
         ...prevState.contacts,
       ],
-      name: '',
-      number: '',
-      filter: '',
     }));
   };
 
@@ -54,9 +48,6 @@ export class App extends Component {
 
   filteredContacts = () => {
     const { contacts, filter } = this.state;
-    if (!filter) {
-      return contacts;
-    }
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
@@ -67,12 +58,7 @@ export class App extends Component {
     return (
       <div className={styles['main-container']}>
         <h1>Phonebook</h1>
-        <ContactForm
-          name={this.state.name}
-          number={this.state.number}
-          onSubmit={this.addContact}
-          onChange={this.handleInputChange}
-        />
+        <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
         <Filter filter={this.state.filter} onChange={this.handleInputChange} />
         <ContactList
